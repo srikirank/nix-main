@@ -1,0 +1,173 @@
+{
+  "nodes": {
+    "brew-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1758543057,
+        "narHash": "sha256-lw3V2jOGYphUFHYQ5oARcb6urlbNpUCLJy1qhsGdUmc=",
+        "owner": "Homebrew",
+        "repo": "brew",
+        "rev": "5b236456eb93133c2bd0d60ef35ed63f1c0712f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Homebrew",
+        "ref": "4.6.12",
+        "repo": "brew",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759172751,
+        "narHash": "sha256-E8W8sRXfrvkFW26GuuiWq6QfReU7m5+cngwHuRo/3jc=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "12fa8548feefa9a10266ba65152fd1a787cdde8f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "k9s-repo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1758986196,
+        "narHash": "sha256-X1AZArXeqfn+YSkj3c4gIVJrFvA4U3oV/XtvpsNhutg=",
+        "owner": "derailed",
+        "repo": "k9s",
+        "rev": "1d8cb6ced0d0f1231fa6bd59f165277d7416b736",
+        "type": "github"
+      },
+      "original": {
+        "owner": "derailed",
+        "repo": "k9s",
+        "type": "github"
+      }
+    },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758805352,
+        "narHash": "sha256-BHdc43Lkayd+72W/NXRKHzX5AZ+28F3xaUs3a88/Uew=",
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "rev": "c48e963a5558eb1c3827d59d21c5193622a1477c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
+    "nix-homebrew": {
+      "inputs": {
+        "brew-src": "brew-src"
+      },
+      "locked": {
+        "lastModified": 1758598228,
+        "narHash": "sha256-qr60maXGbZ4FX5tejPRI3nr0bnRTnZ3AbbbfO6/6jq4=",
+        "owner": "zhaofengli",
+        "repo": "nix-homebrew",
+        "rev": "f36e5db56e117f7df701ab152d0d2036ea85218c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zhaofengli",
+        "repo": "nix-homebrew",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1759070547,
+        "narHash": "sha256-JVZl8NaVRYb0+381nl7LvPE+A774/dRpif01FKLrYFQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "647e5c14cbd5067f44ac86b74f014962df460840",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "k9s-repo": "k9s-repo",
+        "nix-darwin": "nix-darwin",
+        "nix-homebrew": "nix-homebrew",
+        "nixpkgs": "nixpkgs",
+        "rose-bat": "rose-bat",
+        "rose-btop": "rose-btop",
+        "rose-yazi": "rose-yazi"
+      }
+    },
+    "rose-bat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743209992,
+        "narHash": "sha256-maQp4QTJOlK24eid7mUsoS7kc8P0gerKcbvNaxO8Mic=",
+        "owner": "rose-pine",
+        "repo": "tm-theme",
+        "rev": "c4cab0c431f55a3c4f9897407b7bdad363bbb862",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rose-pine",
+        "repo": "tm-theme",
+        "type": "github"
+      }
+    },
+    "rose-btop": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1689701146,
+        "narHash": "sha256-sShQYfsyR5mq/e+pjeIsFzVZv3tCpQEdGC9bnTKlQ5c=",
+        "owner": "rose-pine",
+        "repo": "btop",
+        "rev": "6d6abdc0a8c8bcd3b056d9fe3256cfbe7e359312",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rose-pine",
+        "repo": "btop",
+        "type": "github"
+      }
+    },
+    "rose-yazi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1707245402,
+        "narHash": "sha256-Ygx3tyefGcq3Qqk/72RSJbT5K8G7wVqIk2rCI0vKkNQ=",
+        "owner": "Msouza91",
+        "repo": "rose-pine.yazi",
+        "rev": "4101d0d9c475f23d94b7262e7fd945930378807e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Msouza91",
+        "repo": "rose-pine.yazi",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

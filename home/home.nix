@@ -1,0 +1,37 @@
+{ pkgs, lib, inputs, ... }: {
+
+  home = {
+    username = "sri";
+    homeDirectory = "/Users/sri";
+    stateVersion = "25.05";
+    activation = import ./activation.nix { inherit pkgs lib inputs; };
+  };
+
+  programs = {
+    home-manager.enable = true;
+    atuin = import ./atuin.nix { inherit pkgs; };
+    awscli = import ./aws.nix { inherit pkgs; };
+    mise = import ./mise.nix { inherit pkgs; };
+    nushell = import ./nu.nix { inherit pkgs; };
+    starship = import ./starship.nix { inherit pkgs; };
+    git = import ./git.nix { inherit pkgs; };
+    tmux = import ./tmux.nix { inherit pkgs; };
+    carapace = import ./carapace.nix { inherit pkgs; };
+    bat = import ./bat.nix { inherit pkgs inputs; };
+    direnv = import ./direnv.nix { inherit pkgs; };
+    btop = import ./btop.nix { inherit pkgs; };
+    yazi = import ./yazi.nix { inherit pkgs; };
+    lazygit = import ./lazygit.nix { inherit pkgs; };
+    k9s = import ./k9s.nix { inherit pkgs; };
+    ripgrep = import ./ripgrep.nix { inherit pkgs; };
+    vscode = import ./vscode.nix { inherit pkgs; };
+  };
+
+  imports = [
+    ./jetbrains.nix
+    ./sublime.nix
+    ./apple-setup.nix
+    ./wallpaper.nix
+    ./karabiner.nix
+  ];
+}

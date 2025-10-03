@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nix Darwin Configuration Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 0; text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { font-size: 1.2em; opacity: 0.9; }
+        .toc { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .toc h2 { color: #667eea; margin-bottom: 20px; }
+        .toc ul { list-style: none; }
+        .toc li { margin: 8px 0; }
+        .toc a { color: #667eea; text-decoration: none; padding: 5px 10px; border-radius: 5px; transition: background 0.3s; }
+        .toc a:hover { background: #f0f2ff; }
+        .chapter { background: white; margin: 30px 0; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .chapter h2 { color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px; margin-bottom: 20px; }
+        .chapter h3 { color: #764ba2; margin: 25px 0 15px 0; }
+        .chapter h4 { color: #555; margin: 20px 0 10px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Monaco', 'Menlo', monospace; }
+        pre { background: #2d3748; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 15px 0; }
+        pre code { background: none; padding: 0; color: inherit; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .file-tree { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; font-family: monospace; }
+        ul, ol { margin-left: 20px; margin-bottom: 15px; }
+        li { margin: 5px 0; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+        .feature-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; }
+        .install-steps { counter-reset: step-counter; }
+        .install-steps li { counter-increment: step-counter; position: relative; padding-left: 40px; margin: 20px 0; }
+        .install-steps li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; background: #667eea; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Nix Darwin Configuration</h1>
+            <p class="subtitle">Complete macOS Development Environment Setup</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">1. Overview</a></li>
+                <li><a href="#new-machine">2. New Machine Setup</a></li>
+                <li><a href="#installation">3. Installation Guide</a></li>
+                <li><a href="#system-config">4. System Configuration</a></li>
+                <li><a href="#applications">5. Applications & Tools</a></li>
+                <li><a href="#development">6. Development Environment</a></li>
+                <li><a href="#navigation">7. Code Navigation Guide</a></li>
+                <li><a href="#customization">8. Making Changes</a></li>
+            </ul>
+        </div>
+
+        <div class="chapter" id="overview">
+            <h2>1. 🎯 Overview</h2>
+            <p>This Nix Darwin configuration provides a complete, reproducible macOS development environment. It automatically configures system settings, installs applications, and sets up development tools with consistent theming and workflows.</p>
+            
+            <h3>Key Benefits</h3>
+            <ul>
+                <li><strong>Reproducible:</strong> Same environment across multiple Macs</li>
+                <li><strong>Declarative:</strong> All settings defined in code</li>
+                <li><strong>Version Controlled:</strong> Track changes and rollback if needed</li>
+                <li><strong>Automated:</strong> One command setup for new machines</li>
+            </ul>
+
+            <h3>Architecture</h3>
+            <div class="file-tree">
+├── flake.nix              # Main entry point and dependencies
+├── hosts/darkstar/        # Host-specific configuration
+├── system/               # macOS system settings
+├── pkgs/                 # Package definitions
+└── home/                 # User environment (Home Manager)
+            </div>
+        </div>
+
+        <div class="chapter" id="new-machine">
+            <h2>2. 🆕 New Machine Setup Guide</h2>
+            <p>This section outlines what can be automated with Nix vs what requires manual setup when configuring a fresh Mac.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card" style="border-left-color: #28a745;">
+                    <h3>✅ Automated by Nix</h3>
+                    <h4>🖥️ System Settings</h4>
+                    <ul>
+                        <li>Dark mode, menu bar, dock configuration</li>
+                        <li>Trackpad, keyboard, and input settings</li>
+                        <li>Finder preferences and file associations</li>
+                        <li>Security settings and screensaver</li>
+                        <li>Control center and notification widgets</li>
+                        <li>High-speed cursor navigation</li>
+                        <li>All 68 customized macOS preferences</li>
+                    </ul>
+                    
+                    <h4>📱 Applications</h4>
+                    <ul>
+                        <li>65+ command-line tools via Nix packages</li>
+                        <li>25+ GUI applications via Homebrew casks</li>
+                        <li>20+ Mac App Store applications</li>
+                        <li>9 custom web apps (Safari PWAs)</li>
+                        <li>Complete dock organization</li>
+                    </ul>
+                    
+                    <h4>🛠️ Development Environment</h4>
+                    <ul>
+                        <li>Terminal setup (Ghostty + Nushell)</li>
+                        <li>Shell configuration with Rose Pine theme</li>
+                        <li>Git configuration with SSH signing</li>
+                        <li>Development tools (Docker, Kubernetes, etc.)</li>
+                        <li>Editor configurations (Neovim, VS Code)</li>
+                        <li>Language runtime management (mise)</li>
+                    </ul>
+                    
+                    <h4>🎨 Theming & UI</h4>
+                    <ul>
+                        <li>Consistent Rose Pine theme across all tools</li>
+                        <li>Font installations (Nerd Fonts)</li>
+                        <li>Terminal colors and prompts</li>
+                        <li>Application-specific themes</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" style="border-left-color: #dc3545;">
+                    <h3>❌ Manual Setup Required</h3>
+                    <h4>🍎 Apple Account Services</h4>
+                    <ul>
+                        <li><strong>Apple ID Sign-in:</strong> System Settings → Sign in</li>
+                        <li><strong>iCloud Services:</strong> Drive, Photos, Keychain, etc.</li>
+                        <li><strong>App Store:</strong> Sign in to download purchased apps</li>
+                        <li><strong>Find My:</strong> Enable device tracking</li>
+                        <li><strong>Screen Time:</strong> Configure usage limits</li>
+                        <li><strong>Family Sharing:</strong> Set up shared services</li>
+                    </ul>
+                    
+                    <h4>🔐 Security & Authentication</h4>
+                    <ul>
+                        <li><strong>Touch ID:</strong> Enroll fingerprints</li>
+                        <li><strong>FileVault:</strong> Enable disk encryption</li>
+                        <li><strong>Two-Factor Authentication:</strong> Set up for Apple ID</li>
+                        <li><strong>Privacy Settings:</strong> Review app permissions</li>
+                        <li><strong>Keychain Access:</strong> Import existing keychains</li>
+                    </ul>
+                    
+                    <h4>📧 Communication Setup</h4>
+                    <ul>
+                        <li><strong>Mail:</strong> Add email accounts</li>
+                        <li><strong>Messages:</strong> Enable iMessage and SMS</li>
+                        <li><strong>FaceTime:</strong> Sign in for video calls</li>
+                        <li><strong>Contacts:</strong> Sync contact lists</li>
+                        <li><strong>Calendar:</strong> Add calendar accounts</li>
+                    </ul>
+                    
+                    <h4>🔑 Application Sign-ins</h4>
+                    <ul>
+                        <li><strong>JetBrains:</strong> Account sync for plugins/settings</li>
+                        <li><strong>VS Code:</strong> GitHub/Microsoft account sync</li>
+                        <li><strong>Browsers:</strong> Sign in to sync bookmarks/extensions</li>
+                        <li><strong>Cloud Services:</strong> Dropbox, Google Drive authentication</li>
+                        <li><strong>Development Tools:</strong> GitHub, AWS, Docker Hub</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🚀 Recommended Setup Workflow</h3>
+            <ol class="install-steps">
+                <li>
+                    <strong>Fresh macOS Installation</strong>
+                    <p>Start with a clean macOS install or new Mac setup</p>
+                </li>
+                <li>
+                    <strong>Basic Apple ID Setup</strong>
+                    <p>Sign in to Apple ID during initial setup (required for App Store)</p>
+                </li>
+                <li>
+                    <strong>Install & Run Nix Configuration</strong>
+                    <p>Follow the <a href="#installation">Installation Guide</a> to set up the complete environment</p>
+                    <div class="info">
+                        <strong>⏱️ Time:</strong> 30-60 minutes for initial build<br>
+                        <strong>Result:</strong> 75% of your environment configured automatically
+                    </div>
+                </li>
+                <li>
+                    <strong>Manual Apple Services Configuration</strong>
+                    <p>The system will display setup reminders after Nix build completes:</p>
+                    <pre><code>🍎 MANUAL APPLE ACCOUNT SETUP REQUIRED
+======================================
+
+1. 🆔 Apple ID / iCloud:
+   • System Settings → Sign in with Apple ID
+   • Enable: iCloud Drive, Photos, Keychain, etc.
+
+2. 🛍️  App Store:
+   • Open App Store app → Sign in
+   • Apps auto-download from purchase history
+
+3. 📱 Additional Services:
+   • Messages: Enable iMessage
+   • FaceTime: Sign in for calls
+   • Mail: Add iCloud email account</code></pre>
+                </li>
+                <li>
+                    <strong>Application Authentication</strong>
+                    <p>Sign in to key applications for sync and personalization</p>
+                </li>
+                <li>
+                    <strong>Security Hardening</strong>
+                    <p>Enable Touch ID, FileVault, and review privacy settings</p>
+                </li>
+            </ol>
+
+            <h3>📊 Setup Time Breakdown</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⚡ Nix Automation</h4>
+                    <ul>
+                        <li><strong>Initial Build:</strong> 30-60 minutes</li>
+                        <li><strong>Subsequent Builds:</strong> 2-5 minutes</li>
+                        <li><strong>Coverage:</strong> ~75% of total setup</li>
+                        <li><strong>Effort:</strong> One command</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>👤 Manual Setup</h4>
+                    <ul>
+                        <li><strong>Apple Services:</strong> 10-15 minutes</li>
+                        <li><strong>App Sign-ins:</strong> 15-20 minutes</li>
+                        <li><strong>Security Setup:</strong> 5-10 minutes</li>
+                        <li><strong>Total Manual:</strong> 30-45 minutes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🎯 Key Benefits of This Approach</h3>
+            <ul>
+                <li><strong>Reproducible:</strong> Same environment across all your Macs</li>
+                <li><strong>Fast Recovery:</strong> Rebuild entire system in ~1 hour</li>
+                <li><strong>Version Controlled:</strong> Track and rollback changes</li>
+                <li><strong>Secure:</strong> No credentials stored in configuration files</li>
+                <li><strong>Flexible:</strong> Easy to customize and extend</li>
+            </ul>
+
+            <h3>🔄 Updating Existing Machines</h3>
+            <p>For machines already running this configuration:</p>
+            <pre><code># Pull latest changes
+git pull origin main
+
+# Update dependencies
+nix flake update
+
+# Apply changes
+darwin-rebuild switch --flake .#darkstar</code></pre>
+
+            <div class="warning">
+                <strong>💡 Pro Tip:</strong> Keep a backup of your working configuration in git before making major changes. You can always rollback with <code>darwin-rebuild --rollback</code>.
+            </div>
+
+        </div>
+
+        <div class="chapter" id="installation">
+            <h2>3. 🚀 Installation Guide</h2>
+            
+            <h3>Prerequisites</h3>
+            <p>Fresh macOS installation (Apple Silicon Mac recommended)</p>
+
+            <h3>Installation Steps</h3>
+            <ol class="install-steps">
+                <li>
+                    <strong>Install Nix Package Manager</strong>
+                    <pre><code>sh &lt;(curl -L https://nixos.org/nix/install)</code></pre>
+                </li>
+                <li>
+                    <strong>Verify Nix Installation</strong>
+                    <pre><code>nix-shell -p neofetch --run neofetch</code></pre>
+                </li>
+                <li>
+                    <strong>Clone This Repository</strong>
+                    <pre><code>git clone &lt;your-repo-url&gt; ~/nix-config
+cd ~/nix-config</code></pre>
+                </li>
+                <li>
+                    <strong>🚨 CRITICAL: Update Personal Information</strong>
+                    <p>You MUST customize the configuration before building. See the <a href="#customization">Customization section</a> for required changes:</p>
+                    <ul>
+                        <li>Username: "sri" → your username</li>
+                        <li>Home directory: "/Users/stelo" → your home</li>
+                        <li>Git info: name and email</li>
+                        <li>AWS configuration (or remove it)</li>
+                        <li>Host name: "darkstar" → your choice</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Test Configuration</strong>
+                    <pre><code>nix flake check</code></pre>
+                </li>
+                <li>
+                    <strong>Initial System Build</strong>
+                    <pre><code>nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#YOUR-HOST-NAME</code></pre>
+                </li>
+                <li>
+                    <strong>Future Updates</strong>
+                    <pre><code>darwin-rebuild switch --flake .#YOUR-HOST-NAME</code></pre>
+                </li>
+            </ol>
+
+            <div class="warning">
+                <strong>⚠️ Important:</strong> The initial build may take 30-60 minutes as it downloads and compiles packages. Subsequent builds are much faster.
+            </div>
+        </div>
+
+        <div class="chapter" id="system-config">
+            <h2>4. ⚙️ System Configuration</h2>
+            
+            <h3>macOS System Settings</h3>
+            <p>Located in <code>system/mac.nix</code>, this configures:</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🖱️ Input Devices</h4>
+                    <ul>
+                        <li>Trackpad tap to click</li>
+                        <li>Secondary click enabled</li>
+                        <li>Fast key repeat rates</li>
+                        <li>Function keys as standard</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🎨 Interface</h4>
+                    <ul>
+                        <li>Dark mode enabled</li>
+                        <li>Hidden menu bar</li>
+                        <li>24-hour time format</li>
+                        <li>Metric units</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>📁 Finder</h4>
+                    <ul>
+                        <li>Show all file extensions</li>
+                        <li>Show hidden files</li>
+                        <li>Column view default</li>
+                        <li>Path bar visible</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🖥️ Dock</h4>
+                    <ul>
+                        <li>Auto-hide enabled</li>
+                        <li>Curated app selection</li>
+                        <li>No recent apps</li>
+                        <li>Genie minimize effect</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Security Features</h3>
+            <ul>
+                <li>Touch ID for sudo authentication</li>
+                <li>Screensaver password protection</li>
+                <li>Automatic security updates</li>
+                <li>Guest account disabled</li>
+            </ul>
+        </div>
+
+        <div class="chapter" id="applications">
+            <h2>5. 📱 Applications & Tools</h2>
+
+            <h3>Development Applications (Homebrew Casks)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>💻 Code Editors</h4>
+                    <ul>
+                        <li>Cursor (AI-powered)</li>
+                        <li>IntelliJ IDEA</li>
+                        <li>Neovim (terminal)</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🐳 DevOps</h4>
+                    <ul>
+                        <li>Docker Desktop</li>
+                        <li>MongoDB Compass</li>
+                        <li>DynamoDB Local</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🌐 API & Web</h4>
+                    <ul>
+                        <li>Hoppscotch</li>
+                        <li>Zen Browser</li>
+                        <li>Dash (documentation)</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🤖 AI Tools</h4>
+                    <ul>
+                        <li>ChatGPT</li>
+                        <li>Claude</li>
+                        <li>GitHub Copilot</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Productivity Apps (Mac App Store)</h3>
+            <ul>
+                <li><strong>Bear:</strong> Note-taking and writing</li>
+                <li><strong>Craft:</strong> Structured documents</li>
+                <li><strong>Gifox:</strong> GIF recording</li>
+                <li><strong>Perplexity:</strong> AI search</li>
+                <li><strong>Ray:</strong> Database client</li>
+                <li><strong>Flighty:</strong> Flight tracking</li>
+            </ul>
+
+            <h3>System Utilities</h3>
+            <ul>
+                <li><strong>Raycast:</strong> Spotlight replacement</li>
+                <li><strong>Karabiner Elements:</strong> Keyboard customization</li>
+                <li><strong>Lunar:</strong> Display brightness control</li>
+                <li><strong>Ghostty:</strong> Terminal emulator</li>
+            </ul>
+        </div>
+
+        <div class="chapter" id="development">
+            <h2>6. 🛠️ Development Environment</h2>
+
+            <h3>Command Line Tools (70+ packages)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🐚 Shell & Navigation</h4>
+                    <ul>
+                        <li><strong>Nushell:</strong> Modern shell with structured data</li>
+                        <li><strong>Starship:</strong> Cross-shell prompt (Rose Pine theme)</li>
+                        <li><strong>Zoxide:</strong> Smart directory jumping</li>
+                        <li><strong>Atuin:</strong> Shell history with sync</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>📁 File Management</h4>
+                    <ul>
+                        <li><strong>Yazi:</strong> Terminal file manager</li>
+                        <li><strong>Bat:</strong> Cat with syntax highlighting</li>
+                        <li><strong>Ripgrep:</strong> Fast text search</li>
+                        <li><strong>FZF:</strong> Fuzzy finder</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>🔧 Development</h4>
+                    <ul>
+                        <li><strong>Git:</strong> With Delta diff viewer</li>
+                        <li><strong>Lazygit:</strong> Terminal Git UI</li>
+                        <li><strong>Mise:</strong> Runtime version manager</li>
+                        <li><strong>Direnv:</strong> Environment variable loader</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>☸️ Kubernetes</h4>
+                    <ul>
+                        <li><strong>kubectl:</strong> Kubernetes CLI</li>
+                        <li><strong>k9s:</strong> Terminal Kubernetes UI</li>
+                        <li><strong>Helm:</strong> Package manager</li>
+                        <li><strong>Minikube:</strong> Local clusters</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🖥️ Terminal Preferences</h3>
+            <div class="info">
+                <strong>Philosophy:</strong> Modern, performant tools with consistent Rose Pine theming and Nushell-first workflow.
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Terminal Emulator</h4>
+                    <ul>
+                        <li><strong>Ghostty:</strong> GPU-accelerated, modern terminal</li>
+                        <li>Fast rendering and low latency</li>
+                        <li>Native macOS integration</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Shell Environment</h4>
+                    <ul>
+                        <li><strong>Nushell:</strong> Structured data shell</li>
+                        <li>Set as default system shell</li>
+                        <li>Custom keybindings and aliases</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Visual Theme</h4>
+                    <ul>
+                        <li><strong>Rose Pine:</strong> Consistent across all tools</li>
+                        <li>Applied to: btop, tmux, starship, yazi, k9s</li>
+                        <li>Cohesive aesthetic experience</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Modern CLI Tools</h4>
+                    <ul>
+                        <li><strong>bat</strong> → replaces cat</li>
+                        <li><strong>btop</strong> → replaces htop</li>
+                        <li><strong>zoxide</strong> → replaces cd</li>
+                        <li><strong>starship</strong> → modern prompt</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>Terminal Workflow</h4>
+            <ul>
+                <li><strong>Tmux:</strong> Terminal multiplexer with Rose Pine theme and custom keybindings</li>
+                <li><strong>Mise:</strong> Unified language runtime manager (Python, Ruby, Java, Rust, Go, Node.js, etc.)</li>
+                <li><strong>Atuin:</strong> Enhanced shell history with sync</li>
+                <li><strong>Direnv:</strong> Automatic environment variable loading</li>
+                <li><strong>Carapace:</strong> Multi-shell completion framework</li>
+            </ul>
+
+            <h4>Development Integration</h4>
+            <ul>
+                <li><strong>Lazygit:</strong> Terminal Git UI with Rose Pine theme</li>
+                <li><strong>K9s:</strong> Kubernetes terminal UI with custom skins</li>
+                <li><strong>AWS CLI:</strong> Pre-configured profiles and completion</li>
+                <li><strong>Yazi:</strong> Terminal file manager with Rose Pine colors</li>
+            </ul>
+
+            <h3>🚀 Language Runtime Management</h3>
+            <div class="info">
+                <strong>Mise</strong> provides unified, reproducible language version management across all development environments.
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Core Languages</h4>
+                    <ul>
+                        <li><strong>Python:</strong> latest (with poetry)</li>
+                        <li><strong>Ruby:</strong> latest</li>
+                        <li><strong>Java:</strong> Amazon Corretto (latest)</li>
+                        <li><strong>Rust:</strong> stable toolchain</li>
+                        <li><strong>Go:</strong> latest</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>JavaScript Ecosystem</h4>
+                    <ul>
+                        <li><strong>Node.js:</strong> LTS version</li>
+                        <li><strong>Deno:</strong> latest</li>
+                        <li><strong>Bun:</strong> latest</li>
+                        <li><strong>.NET:</strong> latest</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Development Tools</h4>
+                    <ul>
+                        <li><strong>Terraform:</strong> latest</li>
+                        <li><strong>Poetry:</strong> Python package manager</li>
+                        <li><strong>Spectral:</strong> API linting</li>
+                        <li>Auto-install missing tools</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>Project Management</h4>
+                    <ul>
+                        <li><strong>.mise.toml:</strong> Per-project versions</li>
+                        <li><strong>Global defaults:</strong> System-wide fallbacks</li>
+                        <li><strong>Shell integration:</strong> Nushell support</li>
+                        <li><strong>Fast installs:</strong> Pre-compiled binaries</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>Configuration</h4>
+            <ul>
+                <li><strong>Declarative:</strong> All versions defined in Nix configuration</li>
+                <li><strong>Reproducible:</strong> Same versions across all machines</li>
+                <li><strong>Organized:</strong> Tools installed in <code>~/.local/share/mise</code></li>
+                <li><strong>Project-specific:</strong> Override global versions per project</li>
+            </ul>
+
+            <h4>Usage Examples</h4>
+            <pre><code># Check installed versions
+mise current
+
+# Use specific version in project
+echo 'python = "3.11"' >> .mise.toml
+mise install
+
+# List available versions
+mise list-remote python
+
+# Upgrade all tools
+mise upgrade</code></pre>
+        </div>
+
+        <div class="chapter" id="navigation">
+            <h2>7. 🧭 Code Navigation Guide</h2>
+
+            <h3>Project Structure</h3>
+            <div class="file-tree">
+nix-main/
+├── flake.nix                    # 🎯 Main configuration entry point
+├── hosts/darkstar/
+│   └── configuration.nix        # 🖥️ Host-specific settings
+├── system/
+│   └── mac.nix                  # ⚙️ macOS system preferences
+├── pkgs/
+│   ├── system.nix              # 📦 Command-line tools
+│   ├── brew.nix                # 🍺 GUI applications
+│   └── fonts.nix               # 🔤 Font installations
+└── home/
+    ├── home.nix                # 🏠 Home Manager entry point
+    ├── activation.nix          # 🚀 Setup scripts
+    ├── terminal.nix            # 🖥️ Terminal preferences
+    ├── mise.nix                # 🔧 Language runtime manager
+    ├── nu.nix                  # 🐚 Nushell configuration
+    ├── starship.nix            # ⭐ Prompt configuration
+    ├── tmux.nix                # 📺 Terminal multiplexer
+    ├── git.nix                 # 📝 Git settings
+    └── [other tool configs]    # 🔧 Individual tool settings
+            </div>
+
+            <h3>Key Files Explained</h3>
+            <h4>🎯 flake.nix</h4>
+            <ul>
+                <li>Defines dependencies (nixpkgs, nix-darwin, home-manager)</li>
+                <li>Specifies the "darkstar" configuration</li>
+                <li>Sets up Home Manager integration</li>
+                <li>Configures Homebrew integration</li>
+            </ul>
+
+            <h4>🖥️ hosts/darkstar/configuration.nix</h4>
+            <ul>
+                <li>Sets username and home directory</li>
+                <li>Enables experimental Nix features</li>
+                <li>Configures Touch ID for sudo</li>
+                <li>Imports system defaults and packages</li>
+            </ul>
+
+            <h4>📦 pkgs/system.nix</h4>
+            <ul>
+                <li>70+ command-line tools and utilities</li>
+                <li>Development tools (git, docker, kubectl)</li>
+                <li>Text processing (ripgrep, bat, jq)</li>
+                <li>System monitoring (btop, htop)</li>
+            </ul>
+
+            <h4>🍺 pkgs/brew.nix</h4>
+            <ul>
+                <li>GUI applications via Homebrew casks</li>
+                <li>Mac App Store applications</li>
+                <li>Automatic cleanup and updates</li>
+            </ul>
+        </div>
+
+        <div class="chapter" id="customization">
+            <h2>8. ✏️ Customization Hooks & Making Changes</h2>
+
+            <div class="warning">
+                <strong>🚨 REQUIRED: Personal Information Setup</strong><br>
+                Before using this configuration, you MUST update all personal information to match your setup. The current config contains specific user data that needs to be changed.
+            </div>
+
+            <h3>🔧 Essential Customization Points</h3>
+
+            <h4>1. User Identity & Directories</h4>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📁 flake.nix</h4>
+                    <pre><code># Line 21: Change username
+users.sri = import ./home/home.nix;
+
+# Line 26: Change homebrew user  
+user = "sri";</code></pre>
+                </div>
+                <div class="feature-card">
+                    <h4>🏠 home/home.nix</h4>
+                    <pre><code># Lines 4-5: Update user info
+username = "sri";
+homeDirectory = "/Users/stelo";</code></pre>
+                </div>
+                <div class="feature-card">
+                    <h4>🖥️ hosts/darkstar/configuration.nix</h4>
+                    <pre><code># Line 4: Set home directory
+users.users.sri.home = "/Users/sri";
+
+# Line 15: Set primary user
+primaryUser = "sri";</code></pre>
+                </div>
+                <div class="feature-card">
+                    <h4>☸️ home/k9s.nix</h4>
+                    <pre><code># Line 6: Update screen dump path
+screenDumpDir = "/Users/stelo/...";</code></pre>
+                </div>
+            </div>
+
+            <h4>2. Git Configuration</h4>
+            <p><strong>File:</strong> <code>home/git.nix</code></p>
+            <pre><code># Lines 4-5: Your Git identity
+userName = "srikirank";
+userEmail = "kvrs.kiran@gmail.com";
+
+# Line 67: SSH signing key path (auto-generated)
+user.signingKey = "~/.ssh/id_ed25519.pub";</code></pre>
+
+            <h4>3. SSH Key Generation</h4>
+            <p><strong>File:</strong> <code>home/activation.nix</code></p>
+            <pre><code># Line 25: Email for SSH key
+ssh-keygen ... -C "contact@stelo.dev"
+
+# Lines 26-27: GitHub SSH key titles
+--title darkstar  # Change to your hostname</code></pre>
+
+            <h4>4. AWS Configuration</h4>
+            <p><strong>File:</strong> <code>home/aws.nix</code> - Replace ALL AWS-specific data:</p>
+            <pre><code># SSO Session (lines 35-39)
+"sso-session stelo" = {
+  sso_start_url = "https://stelo.awsapps.com/start/#";
+  # ↑ Replace with your AWS SSO URL
+};
+
+# Profile Names (lines 8, 13, 18, 23, 28)
+"profile darkstar-beta" = { ... };
+"profile darkstar-prod" = { ... };
+# ↑ Replace with your project names
+
+# Account IDs (lines 9, 14, 19, 24, 29)
+sso_account_id = "226776128672";
+# ↑ Replace with your AWS account IDs</code></pre>
+
+            <h4>5. Host Configuration Name</h4>
+            <p>The configuration is named "darkstar" - to change it:</p>
+            <ol>
+                <li>Rename <code>hosts/darkstar/</code> to <code>hosts/YOUR-NAME/</code></li>
+                <li>Update <code>flake.nix</code> line 17: <code>darwinConfigurations."YOUR-NAME"</code></li>
+                <li>Update build command: <code>darwin-rebuild switch --flake .#YOUR-NAME</code></li>
+            </ol>
+
+            <h3>📝 Step-by-Step Customization Process</h3>
+            <ol class="install-steps">
+                <li>
+                    <strong>Clone and Navigate</strong>
+                    <pre><code>git clone &lt;repo-url&gt; ~/nix-config
+cd ~/nix-config</code></pre>
+                </li>
+                <li>
+                    <strong>Update User Information</strong>
+                    <p>Replace all instances of "sri", "stelo", and "darkstar" with your values:</p>
+                    <pre><code># Find all occurrences
+grep -r "sri\|stelo\|darkstar" --include="*.nix" .
+
+# Use find-replace in your editor</code></pre>
+                </li>
+                <li>
+                    <strong>Update Git Configuration</strong>
+                    <p>Edit <code>home/git.nix</code> with your name and email</p>
+                </li>
+                <li>
+                    <strong>Clean AWS Configuration</strong>
+                    <p>Either remove <code>home/aws.nix</code> or replace with your AWS setup</p>
+                </li>
+                <li>
+                    <strong>Test Configuration</strong>
+                    <pre><code>nix flake check</code></pre>
+                </li>
+                <li>
+                    <strong>Apply Changes</strong>
+                    <pre><code>nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#YOUR-HOST-NAME</code></pre>
+                </li>
+            </ol>
+
+            <h3>📋 Complete Customization Reference</h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 12px; border: 1px solid #ddd;">File</th>
+                            <th style="padding: 12px; border: 1px solid #ddd;">What to Change</th>
+                            <th style="padding: 12px; border: 1px solid #ddd;">Current Value</th>
+                            <th style="padding: 12px; border: 1px solid #ddd;">Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>flake.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 21: <code>users.sri</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">sri</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Home Manager user</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>flake.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 26: <code>user = "sri"</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">sri</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Homebrew user</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>flake.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 17: <code>"darkstar"</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">darkstar</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Host configuration name</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/home.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 4: <code>username</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">sri</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Home Manager username</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/home.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 5: <code>homeDirectory</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">/Users/stelo</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">User home path</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>hosts/darkstar/configuration.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 4: <code>users.users.sri.home</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">/Users/sri</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">System user home</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>hosts/darkstar/configuration.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 15: <code>primaryUser</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">sri</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Primary system user</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/git.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 4: <code>userName</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">srikirank</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Git commit author</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/git.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 5: <code>userEmail</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">kvrs.kiran@gmail.com</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Git commit email</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/activation.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 25: SSH key email</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">contact@stelo.dev</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">SSH key identifier</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/activation.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Lines 26-27: <code>--title darkstar</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">darkstar</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">GitHub SSH key name</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/k9s.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Line 6: <code>screenDumpDir</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">/Users/stelo/...</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">K9s screenshot path</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/aws.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">All profile names</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">darkstar-*, stelo-*</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">AWS profile names</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/aws.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">SSO start URL</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">stelo.awsapps.com</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">AWS SSO login URL</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>home/aws.nix</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Account IDs</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">226776128672, etc.</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">AWS account numbers</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd;"><code>hosts/darkstar/</code></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Directory name</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">darkstar</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Host config folder</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🔍 Quick Find & Replace Commands</h3>
+            <pre><code># Find all customization points
+grep -r "sri\|stelo\|darkstar" --include="*.nix" .
+
+# Replace username (example)
+find . -name "*.nix" -exec sed -i '' 's/sri/YOUR_USERNAME/g' {} \;
+
+# Replace home directory  
+find . -name "*.nix" -exec sed -i '' 's/\/Users\/stelo/\/Users\/YOUR_USERNAME/g' {} \;
+
+# Replace host name
+find . -name "*.nix" -exec sed -i '' 's/darkstar/YOUR_HOST_NAME/g' {} \;</code></pre>
+
+            <h3>🎨 Common Modifications</h3>
+
+            <h4>Adding New Applications</h4>
+            <p><strong>For GUI apps:</strong> Edit <code>pkgs/brew.nix</code></p>
+            <pre><code>casks = [
+  "existing-app"
+  "new-app-name"  # Add here
+];</code></pre>
+
+            <p><strong>For command-line tools:</strong> Edit <code>pkgs/system.nix</code></p>
+            <pre><code>{ pkgs, inputs, ... }: with pkgs; [
+  existing-tool
+  new-cli-tool  # Add here
+];</code></pre>
+
+            <h4>Modifying System Settings</h4>
+            <p>Edit <code>system/mac.nix</code> to change macOS preferences:</p>
+            <pre><code>NSGlobalDomain = {
+  "com.apple.trackpad.enableSecondaryClick" = true;
+  # Add new settings here
+};</code></pre>
+
+            <h4>Customizing Shell Configuration</h4>
+            <p>Edit <code>home/nu.nix</code> for Nushell customizations:</p>
+            <ul>
+                <li>Add aliases and custom commands</li>
+                <li>Modify keybindings</li>
+                <li>Configure environment variables</li>
+            </ul>
+
+            <h4>Changing Dock Applications</h4>
+            <p>Edit <code>system/mac.nix</code> dock section:</p>
+            <pre><code>persistent-apps = [
+  "/System/Applications/Launchpad.app"
+  "/Applications/YOUR-APP.app"  # Add your apps
+];</code></pre>
+
+            <h3>Testing Changes</h3>
+            <ol>
+                <li>Make your modifications</li>
+                <li>Test the build: <code>nix flake check</code></li>
+                <li>Apply changes: <code>darwin-rebuild switch --flake .#darkstar</code></li>
+                <li>Rollback if needed: <code>darwin-rebuild --rollback</code></li>
+            </ol>
+
+            <h3>Best Practices</h3>
+            <ul>
+                <li><strong>Version Control:</strong> Commit changes before applying</li>
+                <li><strong>Small Changes:</strong> Test one modification at a time</li>
+                <li><strong>Documentation:</strong> Comment complex configurations</li>
+                <li><strong>Backup:</strong> Keep working configurations in git</li>
+            </ul>
+
+            <div class="info">
+                <strong>💡 Pro Tip:</strong> Use <code>nix flake update</code> to update all dependencies, then rebuild to get the latest packages.
+            </div>
+
+            <h3>Troubleshooting</h3>
+            <ul>
+                <li><strong>Build Errors:</strong> Check syntax with <code>nix flake check</code></li>
+                <li><strong>Permission Issues:</strong> Ensure proper file ownership</li>
+                <li><strong>App Not Installing:</strong> Verify cask/package names</li>
+                <li><strong>Settings Not Applied:</strong> Some require logout/restart</li>
+            </ul>
+
+            <h3>Getting Help</h3>
+            <ul>
+                <li><strong>Nix Darwin:</strong> <a href="https://github.com/LnL7/nix-darwin">GitHub Repository</a></li>
+                <li><strong>Home Manager:</strong> <a href="https://nix-community.github.io/home-manager/">Documentation</a></li>
+                <li><strong>Package Search:</strong> <a href="https://search.nixos.org/packages">NixOS Package Search</a></li>
+                <li><strong>Homebrew Casks:</strong> <a href="https://formulae.brew.sh/cask/">Homebrew Formulae</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 40px; color: #666; border-top: 1px solid #eee; margin-top: 40px;">
+        <p>Generated for Nix Darwin Configuration • Last updated: September 2025</p>
+    </footer>
+</body>
+</html>
