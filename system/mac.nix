@@ -42,13 +42,12 @@
     AppleMetricUnits = 1;                           # Metric units (default: varies by region)
     AppleTemperatureUnit = "Celsius";               # Temperature unit (default: varies)
     AppleMeasurementUnits = "Centimeters";          # Measurement units (default: varies)
-    AppleICUForce24HourTime = true;                 # 24-hour time (default: false)
+    AppleICUForce24HourTime = false;                 # 24-hour time (default: false)
 
     # SCROLLING & ANIMATION
     AppleShowScrollBars = "Automatic";              # Scroll bar visibility (default: varies)
     NSScrollAnimationEnabled = true;                # Smooth scrolling (default: varies)
     NSWindowResizeTime = 0.001;                     # Window resize animation speed (default: 0.2)
-    NSAutomaticWindowAnimationsEnabled = false;     # Disable window animations (default: true)
 
     # SOUND
     "com.apple.sound.beep.feedback" = 1;           # Sound feedback (default: varies)
@@ -88,10 +87,9 @@
     orientation = "bottom";                         # Position (default: "bottom")
 
     # BEHAVIOR
-    show-recents = false;                          # Show recent apps (default: true)
-    show-process-indicators = true;                # Show app indicators (default: true)
+#    show-recents = false;                          # Show recent apps (default: true)
+    show-process-indicators = true;                # Show app indicators (default: truminie)
     minimize-to-application = true;                # Minimize to app icon (default: false)
-    launchanim = false;                            # Disable launch animation (default: true)
     mineffect = "scale";                           # Minimize effect (default: "genie")
 
     # DOCK CONTENTS - Your complete app list
@@ -123,7 +121,6 @@
 #      "/Users/sri/Applications/TMobile Billing.app"
     ];
     persistent-others = [];                         # No folders in dock
-    expose-animation-duration = 0.1;                # Mission Control animation speed (default: 0.75)
   };
 
   # ============================================================================
