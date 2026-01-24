@@ -7,23 +7,32 @@
     "openjdk"
     "swagger-codegen"
     "pueue"
+    "hey"
+    "telnet"
+    "maven"
+    "gemini-cli"
   ];
   casks = [
     # Working casks
     "claude"
-    "ghostty"
-    "handbrake"
+    "ghostty@tip"
+    "handbrake-app"
+    "istat-menus"
     "linear-linear"
     "raycast"
     "sublime-text"
     "spotify"
     "vlc"
     "lunar"
+    "microsoft-word"
     "monodraw"
     "notion-calendar"
-    "zen-browser"
+    "zen"
     "bartender"
-    
+    "google-drive"
+    "docker-desktop"
+    "dropbox"
+    "google-chrome"
     # Working utilities
     "1password-cli"
     "devutils"
@@ -38,8 +47,7 @@
 
     # Development
     "hoppscotch"
-    "amazon-q"
-    "karabiner-elements"
+    "kiro-cli"
   ];
   masApps = {
     # Core apps - keep these
@@ -58,7 +66,7 @@
     "copilot" = 1447330651;
 
     # iPad Apps
-    #"adblock" = 691121579;
+#    "adblock" = 691121579;
 
     # Comment out potentially problematic paid apps
     # "craft" = 1487937127;

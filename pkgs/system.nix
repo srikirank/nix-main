@@ -16,7 +16,6 @@
   dash
   delta
   direnv
-  docker
   dynamodb-local
   fd
   fish
@@ -25,12 +24,10 @@
   gh
   git
   gitleaks
-  google-chrome
   grc
   grpcui
   grpcurl
   htop
-  istat-menus
   minikube
   inputs.home-manager.packages.${pkgs.system}.default
   istioctl
@@ -38,7 +35,6 @@
   jq
   jqp
   k9s
-  karabiner-elements
   kind
   kubectl-ktop
   kube-prompt
@@ -51,7 +47,6 @@
   kubernetes-helm
   helm-dashboard
   lazygit
-  lazydocker
   lazysql
   lua51Packages.luarocks
   mas
@@ -63,6 +58,7 @@
   neofetch
   neovim
   nerdfetch
+  netcat-gnu
   nushell
   oh-my-posh
   ollama

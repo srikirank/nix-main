@@ -90,6 +90,7 @@
       "*.strings" = "plist";
       "*.tks" = "thinkscript";
     };
+    "files.atomicWrites" = false;
     "files.autoSave" = "onFocusChange";
     "files.encoding" = "utf8";
     "files.exclude" = {

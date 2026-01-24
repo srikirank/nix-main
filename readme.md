@@ -96,3 +96,15 @@ you will need to run this command:
 ```sh
 home-manager switch --flake /path/to/flake.nix
 ```
+
+## Troubleshooting
+
+### Nushell "File not found" Error
+
+If you encounter a "File not found: ~/.cache/zoxide.nu" error when starting nushell on a new Mac, run:
+
+```sh
+mkdir -p ~/.cache && /run/current-system/sw/bin/zoxide init nushell --cmd=cd > ~/.cache/zoxide.nu
+```
+
+This initializes the zoxide cache file that nushell requires. The activation script should handle this automatically, but manual initialization may be needed in some cases.

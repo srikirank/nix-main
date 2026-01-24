@@ -102,6 +102,8 @@
         "/Applications/Bartender 6.app|true"
         "/Applications/LaunchBar.app|true"
         "/System/Volumes/Data/Applications/Things3.app|true"
+        "/System/Volumes/Data/Applications/Google Drive.app|true"
+        "/System/Volumes/Data/Applications/Dropbox.app|true"
       )
       
       for item in "''${LOGIN_ITEMS[@]}"; do

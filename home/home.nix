@@ -5,6 +5,13 @@
     homeDirectory = "/Users/sri";
     stateVersion = "25.05";
     activation = import ./activation.nix { inherit pkgs lib inputs; };
+    
+    file = {
+      ".config/starship-dark.toml".source = (pkgs.formats.toml {}).generate "starship-dark.toml" 
+        ((import ./starship.nix { inherit pkgs; }).settings // { palette = "rosepine"; });
+      ".config/starship-light.toml".source = (pkgs.formats.toml {}).generate "starship-light.toml" 
+        ((import ./starship.nix { inherit pkgs; }).settings // { palette = "rosepine_dawn"; });
+    };
   };
 
   programs = {
@@ -33,5 +40,6 @@
     ./apple-setup.nix
     ./wallpaper.nix
     ./karabiner.nix
+    ./ghostty.nix
   ];
 }

@@ -116,8 +116,8 @@
         if $entry == "PATH" {
             # Merge PATH entries, removing duplicates
             $env.PATH = (
-                ($mise_env | get PATH | split row ":" |
-                append $env.PATH) | uniq
+                ($env.PATH |
+                append ($mise_env | get PATH | split row ":")) | uniq
             )
         } else {
             load-env {($entry): ($mise_env | get $entry)}
@@ -126,6 +126,7 @@
   '';
 
   shellAliases = {
+    ll = "ls -l";
     vim = "nvim";
     vi = "nvim";
     vimdiff = "nvim -d";

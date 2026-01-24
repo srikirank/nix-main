@@ -1,11 +1,8 @@
-{ pkgs, ... }: {
-  enable = true;
-  enableNushellIntegration = true;
-
-  settings = {
+{ pkgs, ... }:
+let
+  baseConfig = {
     add_newline = true;
     command_timeout = 10000;
-    palette = "rosepine";
 
     palettes.rosepine = {
       overlay = "#26233a";
@@ -38,14 +35,14 @@
 
     time = {
       disabled = false;
-      format = "[](fg:overlay)[ $time 󰴈 ]($style)[](fg:overlay)";
+      format = "[](fg:overlay)[ $time 󰴈 ]($style)[](fg:overlay)";
       style = "bg:overlay fg:rose";
       time_format = "%I:%M%P";
       use_12hr = true;
     };
 
     directory = {
-      format = "[](fg:overlay)[ $path ]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[ $path ]($style)[](fg:overlay) ";
       style = "bg:overlay fg:pine";
       truncation_length = 3;
       truncation_symbol = "…/";
@@ -53,21 +50,21 @@
 
     directory.substitutions = {
       Documents = "󰈙";
-      Downloads = " ";
-      Music = " ";
-      Pictures = " ";
+      Downloads = " ";
+      Music = " ";
+      Pictures = " ";
     };
 
     git_branch = {
-      format = "[](fg:overlay)[ $symbol $branch ]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[ $symbol $branch ]($style)[](fg:overlay) ";
       style = "bg:overlay fg:foam";
-      symbol = "";
+      symbol = "";
     };
 
     git_status = {
       disabled = false;
       style = "bg:overlay fg:love";
-      format = "[](fg:overlay)([$all_status$ahead_behind]($style))[](fg:overlay) ";
+      format = "[](fg:overlay)([$all_status$ahead_behind]($style))[](fg:overlay) ";
       up_to_date = "[ ✓ ](bg:overlay fg:iris)";
       untracked = "[?\($count\)](bg:overlay fg:gold)";
       stashed = "[$](bg:overlay fg:iris)";
@@ -82,7 +79,7 @@
 
     username = {
       disabled = false;
-      format = "[](fg:overlay)[ 󰧱 $user ]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[ 󰧱 $user ]($style)[](fg:overlay) ";
       show_always = true;
       style_root = "bg:overlay fg:iris";
       style_user = "bg:overlay fg:iris";
@@ -90,94 +87,100 @@
 
     c = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     elixir = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     elm = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     golang = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     haskell = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     java = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     julia = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     nodejs = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
       symbol = "󰎙 ";
     };
 
     nim = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
       symbol = "󰆥 ";
     };
 
     rust = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = "";
+      symbol = "";
     };
 
     scala = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
-
+      symbol = " ";
     };
 
     python = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$version]($style)[](fg:overlay) ";
       disabled = false;
-      symbol = " ";
+      symbol = " ";
     };
 
     conda = {
       style = "bg:overlay fg:pine";
-      format = "[](fg:overlay)[$symbol$environment]($style)[](fg:overlay) ";
+      format = "[](fg:overlay)[$symbol$environment]($style)[](fg:overlay) ";
       disabled = false;
       symbol = "🅒 ";
     };
   };
+  
+  darkConfig = baseConfig // { palette = "rosepine"; };
+  lightConfig = baseConfig // { palette = "rosepine_dawn"; };
+in
+{
+  home.file.".config/starship-dark.toml".source = (pkgs.formats.toml {}).generate "starship-dark.toml" darkConfig;
+  home.file.".config/starship-light.toml".source = (pkgs.formats.toml {}).generate "starship-light.toml" lightConfig;
 }
