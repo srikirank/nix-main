@@ -115,33 +115,34 @@
         /bin/launchctl bootstrap "gui/$USER_ID" "$PLIST"
       fi
 
+      sleep 4
       echo "Checking Ollama models..."
       # Ensure Ollama is running (or start it briefly) before running these
       # We use 'ollama list' to check for existing models
 
       # Function to bake a Pro model
-      bake_model() {
-        local base=$1
-        local target=$2
-        if ! $OLLAMA_BIN list | grep -q "$target"; then
-          echo "Baking $target with 64k context..."
-          printf "FROM %s\nPARAMETER num_ctx 65536" "$base" > /tmp/Modelfile
-          $OLLAMA_BIN create "$target" -f /tmp/Modelfile
-          rm /tmp/Modelfile
-        fi
-      }
+#      bake_model() {
+#        local base=$1
+#        local target=$2
+#        if ! $OLLAMA_BIN list | grep -q "$target"; then
+#          echo "Baking $target with 64k context..."
+#          printf "FROM %s\nPARAMETER num_ctx 65536" "$base" > /tmp/Modelfile
+#          $OLLAMA_BIN create "$target" -f /tmp/Modelfile
+#          rm /tmp/Modelfile
+#        fi
+#      }
 
       # Bake your principal-engineer-grade models
-      bake_model "qwen3:30b-a3b" "qwen3:pro"
-      bake_model "qwq:32b" "qwq:pro"
-      bake_model "gpt-oss:20b" "gpt-oss:pro"
+#      bake_model "qwen3:30b-a3b" "qwen3:pro"
+#      bake_model "qwq:32b" "qwq:pro"
+#      bake_model "gpt-oss:20b" "gpt-oss:pro"
 
-      # Install Mise Tools
-      /run/current-system/sw/bin/mise bin-paths
-      /run/current-system/sw/bin/mise use --global go@latest
-      /run/current-system/sw/bin/mise use --global python@latest
-      /run/current-system/sw/bin/mise use --global node@latest
-      /run/current-system/sw/bin/mise use --global java@21
+      MISE_BIN="/run/current-system/sw/bin/mise"
+
+      if command -v mise &> /dev/null; then
+        echo "Installing mise tools..."
+        $MISE_BIN install -y
+      fi
 
       # Configure login items
       echo "=== Configuring login items ==="

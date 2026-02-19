@@ -45,7 +45,7 @@
     fi
   '';
 
-  # Set up default shell
+  # Set up default shell and install mise tools
   postActivation = lib.hm.dag.entryAfter ["writeBoundary"] ''
     current_shell=$(basename "$SHELL")
     if [ "$current_shell" != "nu" ]; then

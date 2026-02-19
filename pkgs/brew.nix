@@ -14,7 +14,9 @@
     "opencode"
     "ollama"
     "docker"
+    "typescript"
   ];
+
   casks = [
     # Working casks
     "claude"

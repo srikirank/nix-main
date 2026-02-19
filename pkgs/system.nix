@@ -87,4 +87,7 @@
   zoxide
   zoom-us
   zsh
+
+  nodePackages.ts-node
+  nodePackages.typescript
 ]

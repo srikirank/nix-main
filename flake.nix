@@ -8,6 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,10 +36,16 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, rose-btop, rose-yazi, rose-bat, k9s-repo }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, vscode-extensions, home-manager, rose-btop, rose-yazi, rose-bat, k9s-repo }:
     let
       system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ 
+          vscode-extensions.overlays.default
+        ];
+      };
     in
     {
       # Custom packages
@@ -47,11 +57,12 @@
       # $ darwin-rebuild build --flake .#darkstar
       darwinConfigurations."darkstar" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs pkgs; };
         modules = [
           ./hosts/darkstar/configuration.nix
           ./hosts/darkstar/ollama.nix
           {
+            nixpkgs.pkgs = pkgs;
             # Speed up builds
             nix.settings = {
               max-jobs = "auto";
@@ -64,9 +75,8 @@
           }
           home-manager.darwinModules.home-manager
           {
-            nixpkgs.config.allowUnfree = true;
             home-manager = {
-              extraSpecialArgs = { inherit inputs; };
+              extraSpecialArgs = { inherit inputs pkgs; };
               useGlobalPkgs = true;
               useUserPackages = false;
               backupFileExtension = "bak";

@@ -1,47 +1,203 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: 
+let
+  marketplace = pkgs.vscode-marketplace;
+in {
   enable = true;
+  mutableExtensionsDir = true;
   
   profiles.default = {
-    # Extensions based on your current installation
-    extensions = with pkgs.vscode-extensions; [
-      # Core development
-      ms-python.python
-      ms-vscode.cpptools
-      ms-vscode-remote.remote-ssh
-      ms-vscode-remote.remote-containers
-      github.vscode-pull-request-github
-      github.codespaces
-      
-      # Git & Version Control
-      eamodio.gitlens
-      mhutchie.git-graph
-      
-      # Language Support
-      redhat.java
-      castwide.solargraph  # Ruby
-      bbenoist.nix
-    
-    # Productivity
-    alefragnani.bookmarks
-    alefragnani.project-manager
-    formulahendry.code-runner
-    
-    # Themes & Icons
-    pkief.material-icon-theme
-  ] ++ (with pkgs.vscode-extensions; [
-    # Additional extensions that might not be in nixpkgs
-    # These will be installed manually or via extension marketplace
-  ]);
+    keybindings = [
+#      {
+#        key = "cmd+[";
+#        command = "-editor.action.outdentLines";
+#        when = "editorTextFocus && !editorReadonly";
+#      }
+#      {
+#        key = "shift+tab";
+#        command = "markdown.extension.onOutdentLines";
+#        when = "editorTextFocus && !suggestWidgetVisible && editorLangId =~ /^markdown$|^rmd$|^quarto$/";
+#      }
+#      {
+#        key = "cmd+[";
+#        command = "-markdown.extension.onOutdentLines";
+#        when = "editorTextFocus && !suggestWidgetVisible && editorLangId =~ /^markdown$|^rmd$|^quarto$/";
+#      }
+#      {
+#        key = "cmd+[";
+#        command = "workbench.action.navigateBack";
+#        when = "canNavigateBack";
+#      }
+#      {
+#        key = "ctrl+-";
+#        command = "-workbench.action.navigateBack";
+#        when = "canNavigateBack";
+#      }
+#      {
+#        key = "cmd+]";
+#        command = "extension.arrowForwardBtn";
+#      }
+#      {
+#        key = "tab";
+#        command = "editor.action.indentLines";
+#        when = "editorTextFocus && !editorReadonly";
+#      }
+#      {
+#        key = "cmd+]";
+#        command = "-editor.action.indentLines";
+#        when = "editorTextFocus && !editorReadonly";
+#      }
+#      {
+#        key = "alt+backspace";
+#        command = "-extension.hungryDelete";
+#        when = "editorTextFocus && !editorReadonly";
+#      }
+#      {
+#        key = "alt+backspace";
+#        command = "-workbench.action.terminal.sendSequence";
+#        when = "terminalFocus";
+#      }
+#      {
+#        key = "alt+backspace";
+#        command = "-metaGo.metaJump.deleteToBefore";
+#        when = "editorTextFocus";
+#      }
+    ];
+
+    extensions = [
+      ## --- Ruby Ecosystem (Crucial for BrowserStack) ---
+      marketplace.shopify.ruby-lsp
+      marketplace.castwide.solargraph
+      marketplace.groksrc.ruby
+      marketplace.misogi.ruby-rubocop
+      marketplace.vortizhe.simple-ruby-erb
+      marketplace.hoovercj.ruby-linter
+      marketplace.miguel-savignano.ruby-symbols
+      marketplace.walkme.ruby-extension-pack
+      marketplace.vayan.haml
+
+      ## --- Java & Gradle Ecosystem ---
+      marketplace.redhat.java
+      marketplace.vscjava.vscode-java-pack
+      marketplace.vscjava.vscode-java-debug
+      marketplace.vscjava.vscode-java-dependency
+      marketplace.vscjava.vscode-java-test
+      marketplace.vscjava.vscode-gradle
+      marketplace.vscjava.vscode-maven
+      marketplace.richardwillis.vscode-gradle-extension-pack
+      marketplace.naco-siren.gradle-language
+      marketplace.vscjava.vscode-java-pack
+
+      ## --- Python & Go ---
+      marketplace.ms-python.python
+      marketplace.ms-python.vscode-pylance
+      marketplace.ms-python.debugpy
+      marketplace.kevinrose.vsc-python-indent
+      marketplace.golang.go
+
+      ## --- Web & Infrastructure ---
+      marketplace.ecmel.vscode-html-css
+      marketplace.ms-vscode.powershell
+      marketplace.ms-vscode.makefile-tools
+      marketplace.redhat.vscode-yaml
+      marketplace.mikestead.dotenv
+      marketplace.codezombiech.gitignore
+      marketplace.bbenoist.nix
+      marketplace.pepri.smithy-vscode
+
+      ## --- AI & Cloud ---
+      marketplace.github.copilot-chat
+
+      ## --- Git & Collaboration ---
+      marketplace.eamodio.gitlens
+      marketplace.mhutchie.git-graph
+      marketplace.github.vscode-pull-request-github
+      marketplace.github.remotehub
+      marketplace.ms-vscode.azure-repos
+      marketplace.ms-vsliveshare.vsliveshare
+      marketplace.vsls-contrib.gistfs
+      marketplace.lostintangent.vsls-whiteboard
+      marketplace.codestream.codestream
+      marketplace.vivaxy.vscode-conventional-commits
+      marketplace.github.vscode-github-actions
+
+      ## --- Productivity & Navigation ---
+      marketplace.alefragnani.bookmarks
+      marketplace.alefragnani.project-manager
+      marketplace.atishay-jain.all-autocomplete
+      marketplace.metaseed.metago
+      marketplace.metaseed.metajump
+      marketplace.metaseed.metaword
+      marketplace.junv.recent-files
+      marketplace.lhybdv.goto-recent-files
+      marketplace.percygrunwald.vscode-intellij-recent-files
+      marketplace.pyronaur.jump-to-recent
+      marketplace.tenorok.recent-picker
+      marketplace.nick-rudenko.back-n-forth
+      marketplace.formulahendry.code-runner
+      marketplace.streetsidesoftware.code-spell-checker
+      marketplace.gruntfuggly.todo-tree
+      marketplace.ctf0.macros
+      marketplace.hoovercj.vscode-settings-cycler
+      marketplace.inu1255.easy-snippet
+      marketplace.slevesque.vscode-multiclip
+
+      ## --- AI Code Assist ---
+      marketplace.google.geminicodeassist
+      marketplace.google.gemini-cli-vscode-ide-companion
+      marketplace.ms-windows-ai-studio.windows-ai-studio
+
+      ## --- Text Manipulation ---
+      marketplace.tyriar.sort-lines
+      marketplace.tyriar.vscode-terminal-here
+      marketplace.adamhartford.vscode-base64
+      marketplace.flesler.url-encode
+      marketplace.bibhasdn.unique-lines
+      marketplace.yuvraj.json-scape-unscape
+      marketplace.nickdemayo.vscode-json-editor
+      marketplace.jasonlhy.hungry-delete
+      marketplace.jkjustjoshing.vscode-text-pastry
+      marketplace.lacroixdavid1.vscode-format-context-menu
+      marketplace.jakearl.search-editor-apply-changes
+
+      ## --- Remote & Filesystem ---
+      marketplace.ms-vscode-remote.remote-ssh
+      marketplace.ms-vscode-remote.remote-ssh-edit
+      marketplace.ms-vscode-remote.remote-containers
+      marketplace.ms-vscode.remote-explorer
+      marketplace.ms-vscode.remote-repositories
+      marketplace.ms-vscode.remote-server
+      marketplace.github.codespaces
+      marketplace.ms-azuretools.vscode-docker
+      marketplace.ms-azuretools.vscode-containers
+      marketplace.ms-kubernetes-tools.vscode-kubernetes-tools
+      marketplace.xyz.local-history
+      marketplace.micnil.vscode-checkpoints
+      marketplace.peterschmalfeldt.explorer-exclude
+      marketplace.nemesv.copy-file-name
+      marketplace.moshfeu.compare-folders
+      marketplace.davidkol.fastcompare
+
+      ## --- UI & Themes ---
+      marketplace.pkief.material-icon-theme
+      marketplace.trinm1709.dracula-theme-from-intellij
+      marketplace.github.github-vscode-theme
+      marketplace.rokoroku.vscode-theme-darcula
+      marketplace.jprestidge.theme-material-theme
+      marketplace.johnpapa.vscode-peacock
+      marketplace.ibm.output-colorizer
+      marketplace.nhoizey.gremlins
+      marketplace.pkubik.hide-all
+      marketplace.pnp.polacode
+      marketplace.tomoki1207.pdf
+      marketplace.yzhang.markdown-all-in-one
+      marketplace.darkriszty.markdown-table-prettify
+      marketplace.ms-vscode.sublime-keybindings
+      marketplace.jabacchetta.vscode-essentials
+    ];
 
     userSettings = {
     # AWS & Cloud
-    "AWSGuruQLinter.ruleSet" = "topsecurity";
-    "cloudcode.enableTelemetry" = false;
-    
     # Language-specific settings
-    "[brazilPackageConfig]" = {
-      "workbench.editor.languageDetection" = false;
-    };
     "[python]" = {
       "editor.formatOnType" = true;
     };
@@ -57,19 +213,16 @@
     # Spell checking
     "cSpell.enabled" = false;
     "cSpell.userWords" = [
-      "APIGW"
-      "Backplane"
-      "cloudcode"
       "codestream"
       "denoms"
       "levelname"
       "rtype"
-      "skanchib"
       "Subarray"
     ];
     
     # Editor settings
-    "editor.acceptSuggestionOnEnter" = "on";
+    "editor.acceptSuggestionOnEnter" = "smart";
+    "editor.tabCompletion" = "on";
     "editor.accessibilitySupport" = "off";
     "editor.autoIndent" = "full";
     "editor.detectIndentation" = true;
@@ -90,7 +243,6 @@
       "*.strings" = "plist";
       "*.tks" = "thinkscript";
     };
-    "files.atomicWrites" = false;
     "files.autoSave" = "onFocusChange";
     "files.encoding" = "utf8";
     "files.exclude" = {
@@ -102,7 +254,6 @@
       "**/CVS" = true;
       "**/Thumbs.db" = true;
       ".bemol" = true;
-      ".viceroy" = true;
       "apollo-overrides" = true;
       "build" = false;
       "env" = true;
@@ -130,13 +281,14 @@
       "env" = true;
       "src/*/build" = true;
     };
-    
+
     # Security & Privacy
     "security.workspace.trust.untrustedFiles" = "open";
     "telemetry.telemetryLevel" = "off";
     "gitlens.telemetry.enabled" = false;
     "redhat.telemetry.enabled" = false;
     "code-runner.enableAppInsights" = false;
+    "http.systemCertificatesNode" = true;
     
     # Terminal settings
     "terminal.external.osxExec" = "Ghostty.app";
@@ -145,7 +297,11 @@
     
     # TypeScript settings
     "typescript.tsserver.maxTsServerMemory" = 10240;
-    
+    "aws.cloudformation.telemetry.enabled" = false;
+
+    # AI
+    "chat.mcp.gallery.enabled" = true;
+
     # Workbench & UI
     "window.autoDetectColorScheme" = true;
     "window.closeWhenEmpty" = false;
@@ -158,30 +314,9 @@
     "workbench.preferredHighContrastColorTheme" = "GitHub Dark High Contrast";
     "workbench.preferredHighContrastLightColorTheme" = "GitHub Light High Contrast";
     "workbench.preferredLightColorTheme" = "GitHub Light";
-    
-    # Kubernetes
-    "vs-kubernetes" = {
-      "vscode-kubernetes.helm-path.mac" = "/Users/sri/.vs-kubernetes/tools/helm/darwin-arm64/helm";
-      "vscode-kubernetes.kubectl-path.mac" = "/Users/sri/.vs-kubernetes/tools/kubectl/kubectl";
+    "terminal.integrated.env.osx" = {
+        "Q_NEW_SESSION" = "1";
     };
-    
-    # YAML schemas
-    "yaml.schemas" = {
-      "file:///Users/sri/.vscode/extensions/marklel.vscode-brazil-0.51.201448/assets/languages/rde/schema.json" = "**/definition.yaml";
-    };
-    
-    # Viceroy (Amazon internal tool settings)
-    "viceroy.config.internal.lastUpdateTime" = "2023-06-28T00:14:04.347Z";
-    "viceroy.config.lastVersion" = "0.51.201448";
-    "viceroy.doc.welcome.showAtStartup" = false;
-    "viceroy.marketplace.extensionUpdateChannels" = {
-      "amzn.AWSGuruQLinter" = "stable";
-      "marklel.vscode-brazil" = "stable";
-    };
-    "viceroy.workspaceSyncStrategy" = "automatic";
-    
-    # Run in terminal
-    "runInTerminal.commands" = [];
     };
   };
 }

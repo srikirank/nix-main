@@ -116,7 +116,8 @@
         "nixpkgs": "nixpkgs",
         "rose-bat": "rose-bat",
         "rose-btop": "rose-btop",
-        "rose-yazi": "rose-yazi"
+        "rose-yazi": "rose-yazi",
+        "vscode-extensions": "vscode-extensions"
       }
     },
     "rose-bat": {
@@ -164,6 +165,26 @@
       "original": {
         "owner": "Msouza91",
         "repo": "rose-pine.yazi",
+        "type": "github"
+      }
+    },
+    "vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770692379,
+        "narHash": "sha256-05tn6+BH/B4Js+ele6uq2Xno0xpB0wv8fA6TNXMoXX8=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "07f2af64427334c4098770884746ecf2471a574f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
         "type": "github"
       }
     }
