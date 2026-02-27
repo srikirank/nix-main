@@ -212,20 +212,6 @@
       QLPreviewMinimumDelay = 0;                   # Remove Quick Look delay
     };
 
-    # NOTIFICATION CENTER WIDGETS
-    "com.apple.notificationcenterui" = {
-      TodayView = {
-        keyWidget = "com.culturedcode.ThingsMac.TodayWidget";
-        order = [
-          "com.culturedcode.ThingsMac.TodayWidget"
-          "com.apple.ncplugin.WorldClock"
-          "com.apple.iCal.CalendarNC"
-          "com.flexibits.fantastical2.mac.today-widget"
-          "com.bjango.istatmenus.iStat-Menus-Widget"
-        ];
-      };
-    };
-
     # DESKTOP WIDGETS
     "com.apple.WindowManager" = {
       StandardHideWidgets = true;                   # Hide desktop widgets (default: false)

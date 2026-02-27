@@ -19,7 +19,10 @@
 
   casks = [
     # Working casks
-    "claude"
+    "claude-code"
+    "github"
+    "cursor"
+    "hyperwhisper"
     "ghostty@tip"
     "handbrake-app"
     "istat-menus"
@@ -34,6 +37,7 @@
     "notion-calendar"
     "zen"
     "bartender"
+    "contexts"
     "google-drive"
     "docker-desktop"
     "dropbox"
@@ -69,6 +73,7 @@
     "infuse" = 1136220934;
     "whatsapp" = 310633997;
     "copilot" = 1447330651;
+    "vncremotedesktop" = 1663047912;
 
     # iPad Apps
 #    "adblock" = 691121579;

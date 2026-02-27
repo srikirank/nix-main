@@ -148,8 +148,8 @@
       echo "=== Configuring login items ==="
       
       # Clear all existing login items first
-      sudo -u sri osascript -e 'tell application "System Events" to delete login items 1 thru -1'
-      
+      sudo -u sri osascript -e 'tell application "System Events" to repeat while (count of login items) > 0' -e 'delete login item 1' -e 'end repeat'
+
       LOGIN_ITEMS=(
         "/Applications/Raycast.app|true"
         "/Applications/1Password 7.app|true"
