@@ -28,6 +28,7 @@
     "istat-menus"
     "linear-linear"
     "raycast"
+    "warp"
     "sublime-text"
     "spotify"
     "vlc"
