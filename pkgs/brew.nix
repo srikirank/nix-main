@@ -29,6 +29,7 @@
     "linear-linear"
     "raycast"
     "warp"
+    "postman"
     "sublime-text"
     "spotify"
     "vlc"
