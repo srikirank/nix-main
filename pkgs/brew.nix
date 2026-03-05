@@ -15,6 +15,7 @@
     "ollama"
     "docker"
     "typescript"
+    "code-cli"
   ];
 
   casks = [
@@ -22,6 +23,7 @@
     "claude-code"
     "github"
     "cursor"
+    "visual-studio-code"
     "hyperwhisper"
     "ghostty@tip"
     "handbrake-app"
