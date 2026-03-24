@@ -16,6 +16,8 @@
     "docker"
     "typescript"
     "code-cli"
+    "cloudflare-wrangler"
+    "skills"
   ];
 
   casks = [
@@ -23,6 +25,7 @@
     "claude-code"
     "github"
     "cursor"
+    "freeyourmusic"
     "visual-studio-code"
     "hyperwhisper"
     "ghostty@tip"
