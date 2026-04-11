@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "Bash(/dev/null gh:*)",
+      "Bash(python3 -c \":*)",
+      "mcp__exa__crawling_exa",
+      "mcp__exa__web_search_exa"
+    ]
+  }
+}

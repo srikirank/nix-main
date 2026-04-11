@@ -18,6 +18,7 @@
     "code-cli"
     "cloudflare-wrangler"
     "skills"
+    "wakeonlan"
   ];
 
   casks = [
